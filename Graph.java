@@ -28,17 +28,19 @@ public class Graph extends JFrame
         frame.addEdge(0, 1, 4);
 		frame.addEdge(0, 2, 4);
 		frame.addEdge(1, 3, 1);
-		frame.addEdge(1, 4, 2);
-		frame.addEdge(1, 5, 2);
+		frame.addEdge(1, 4, 3);
+		frame.addEdge(2, 5, 2);
 		frame.addEdge(2, 6, 2);
 		frame.addEdge(3, 4, 1);
 		frame.addEdge(3, 7, 2);
 		frame.addEdge(4, 8, 3);
 		frame.addEdge(5, 8, 2);
 		frame.addEdge(6, 9, 1);
+		frame.addEdge(7, 10, 3);
 		frame.addEdge(7, 11, 4);
 		frame.addEdge(8, 11, 2);
 		frame.addEdge(8, 12, 5);
+		frame.addEdge(9, 8, 2);
 		frame.addEdge(10, 12, 1);
 		frame.addEdge(11, 12, 1);
 
@@ -93,5 +95,5 @@ public class Graph extends JFrame
 			g.drawString(originNode.label, originNode.x - f.stringWidth(originNode.label)/2,
 				originNode.y + f.getHeight()/2);
 		}
-    }
+	}
 }

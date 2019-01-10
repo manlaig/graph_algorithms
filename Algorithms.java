@@ -7,44 +7,45 @@ public class Algorithms
     public static HashMap<Node, Integer> DijkstrasAlgorithm(ArrayList<Node> nodes, Node from, Node to)
     {
         HashMap<Node, Boolean> visited = new HashMap<>();
-        HashMap<Node, Integer> path = new HashMap<>();
+        HashMap<Node, Integer> distance = new HashMap<>();
+        ArrayList<Node> visitQueue = new ArrayList<>();
 
         for(Node node : nodes)
         {
             visited.put(node, false);
-            path.put(node, INFINITE);
+            distance.put(node, INFINITE);
         }
-        path.put(from, 0);
+        distance.put(from, 0);
+        visitQueue.add(from);
 
-        for(int i = 0; i < nodes.size(); i++)
+        while(!visitQueue.isEmpty())
         {
-            Node closest = getClosestUnvisited(path, visited);
+            Node closest = getClosestUnvisited(distance, visitQueue);
             if(closest == null)
-            {
-                System.out.println("NULL");
                 continue;
-            }
-            else
-                System.out.println(closest);
+            visitQueue.remove(closest);
             visited.put(closest, true);
             for(Node edgeNode : closest.edges.keySet())
             {
-                if(!visited.get(edgeNode) && path.get(closest) + closest.edges.get(edgeNode) < path.get(edgeNode))
-                    path.put(edgeNode, path.get(closest) + closest.edges.get(edgeNode));
+                if(!visited.get(edgeNode))
+                    visitQueue.add(edgeNode);
+                int dist = distance.get(closest) + closest.edges.get(edgeNode);
+                if(!visited.get(edgeNode) && dist < distance.get(edgeNode))
+                    distance.put(edgeNode, dist);
             }
         }
-        return path;
+        return distance;
     }
     
-    private static Node getClosestUnvisited(HashMap<Node, Integer> path, HashMap<Node, Boolean> visited)
+    private static Node getClosestUnvisited(HashMap<Node, Integer> distance, ArrayList<Node> nodes)
     {
         int smallest = INFINITE;
         Node closest = null;
-        for(Node node : path.keySet())
+        for(Node node : nodes)
         {
-            if(path.get(node) < smallest && !visited.get(node))
+            if(distance.get(node) < smallest)
             {
-                smallest = path.get(node);
+                smallest = distance.get(node);
                 closest = node;
             }
         }
