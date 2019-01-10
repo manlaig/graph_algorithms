@@ -1,10 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 public class Graph extends JFrame
 {
@@ -44,6 +41,10 @@ public class Graph extends JFrame
 		frame.addEdge(8, 12, 5);
 		frame.addEdge(10, 12, 1);
 		frame.addEdge(11, 12, 1);
+
+		HashMap<Node, Integer> path = Algorithms.DijkstrasAlgorithm(nodes, nodes.get(0), nodes.get(12));
+		for(Node n : path.keySet())
+			System.out.println(n + ": " + path.get(n));
 	}
 
 	Graph(String title)
