@@ -10,21 +10,21 @@ public class Graph extends JFrame
 	static ArrayList<Node> nodes;
 	public static void main(String[] args)
 	{
-        Graph frame = new Graph("Graph Visualizer");
+		Graph frame = new Graph("Graph Visualizer");
     
-        frame.addNode("0", startX, startY + 150);
-		frame.addNode("1", startX + 100, startY + 50);
-		frame.addNode("2", startX + 100, startY + 250);
-		frame.addNode("3", startX + 200, startY);
-		frame.addNode("4", startX + 200, startY + 100);
-		frame.addNode("5", startX + 200, startY + 200);
-		frame.addNode("6", startX + 200, startY + 300);
-		frame.addNode("7", startX + 300, startY + 50);
-		frame.addNode("8", startX + 300, startY + 150);
-		frame.addNode("9", startX + 300, startY + 250);
-		frame.addNode("10", startX + 400, startY + 100);
-		frame.addNode("11", startX + 400, startY + 200);
-		frame.addNode("12", startX + 500, startY + 150);
+        frame.addNode("a", startX, startY + 150);
+		frame.addNode("b", startX + 100, startY + 50);
+		frame.addNode("c", startX + 100, startY + 250);
+		frame.addNode("d", startX + 200, startY);
+		frame.addNode("e", startX + 200, startY + 100);
+		frame.addNode("f", startX + 200, startY + 200);
+		frame.addNode("g", startX + 200, startY + 300);
+		frame.addNode("h", startX + 300, startY + 50);
+		frame.addNode("i", startX + 300, startY + 150);
+		frame.addNode("j", startX + 300, startY + 250);
+		frame.addNode("k", startX + 400, startY + 100);
+		frame.addNode("l", startX + 400, startY + 200);
+		frame.addNode("m", startX + 500, startY + 150);
         frame.addEdge(0, 1, 4);
 		frame.addEdge(0, 2, 4);
 		frame.addEdge(1, 3, 1);
@@ -43,14 +43,37 @@ public class Graph extends JFrame
 		frame.addEdge(9, 11, 2);
 		frame.addEdge(10, 12, 1);
 		frame.addEdge(11, 12, 1);
-
-		ArrayList<Node> path = Algorithms.DijkstrasAlgorithm(nodes,
-		nodes.get(0), nodes.get(12));
-		frame.DrawPath(path);
 	}
 
 	Graph(String title)
 	{
+		JPanel pathFinder = new JPanel();
+		JButton b1 = new JButton("Use Dijkstra's");
+		JTextField fromNode = new JTextField("a", 2);
+		JLabel fromLabel = new JLabel("From:");
+		JTextField toNode = new JTextField("m", 2);
+		JLabel toLabel = new JLabel("To:");
+		pathFinder.add(fromLabel);
+		pathFinder.add(fromNode);
+		pathFinder.add(toLabel);
+		pathFinder.add(toNode);
+		pathFinder.add(b1);
+		add(pathFinder, BorderLayout.SOUTH);
+		
+		b1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				int origin = 0, dest = 12;
+				try
+				{
+					origin = ((int)fromNode.getText().charAt(0)) - 97;
+					dest = ((int)toNode.getText().charAt(0)) - 97;
+				}
+				catch(Exception exc) { System.out.println("Invalid input"); }
+				ArrayList<Node> path = Algorithms.DijkstrasAlgorithm(nodes, nodes.get(origin), nodes.get(dest));
+				DrawPath(path);
+			}
+		});
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(600,600);
@@ -70,6 +93,7 @@ public class Graph extends JFrame
 	
 	public void paint(Graphics g)
 	{
+		super.paint(g);
 		FontMetrics f = g.getFontMetrics();
 		int nodeheightOfNode = Math.max(heightOfNode, f.getHeight());
 
@@ -97,13 +121,11 @@ public class Graph extends JFrame
 
 	void DrawPath(ArrayList<Node> path)
 	{
+		paint(getGraphics());
 		Graphics2D g = (Graphics2D) getGraphics();
-		if(path.size() <= 1)
-			return;
-		g.setStroke(new BasicStroke(10));
+		if(path.size() <= 1)	return;
+		g.setStroke(new BasicStroke(5));
 		for(int i = 1; i < path.size(); i++)
-		{
 			g.drawLine(path.get(i - 1).x, path.get(i - 1).y, path.get(i).x, path.get(i).y);
-		}
 	}
 }
