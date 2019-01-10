@@ -9,6 +9,7 @@ public class Algorithms
         HashMap<Node, Boolean> visited = new HashMap<>();
         HashMap<Node, Integer> distance = new HashMap<>();
         ArrayList<Node> visitQueue = new ArrayList<>();
+        /* mapping the shortest path to every node */
         HashMap<Node, ArrayList<Node>> path = new HashMap<>();
 
         for(Node node : nodes)
@@ -38,7 +39,6 @@ public class Algorithms
                     path.put(edgeNode, (ArrayList) path.get(closest).clone());
                     path.get(edgeNode).add(closest);
                     distance.put(edgeNode, dist);
-                    //System.out.println("From: " + closest + " Visiting: " + edgeNode + " dist: " + dist);
                 }
             }
         }
@@ -51,13 +51,11 @@ public class Algorithms
         int smallest = INFINITE;
         Node closest = null;
         for(Node node : nodes)
-        {
             if(distance.get(node) < smallest)
             {
                 smallest = distance.get(node);
                 closest = node;
             }
-        }
         return closest;
     }
 }

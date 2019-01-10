@@ -26,12 +26,4 @@ public class Node
         Node node = (Node) obj;
         return node.x == x && node.y == y;
     }
-
-    @Override
-    public int hashCode()
-    {
-        /* used to not allow duplicate nodes in HashSet */
-        /* if not overriden, HashSet will add nodes with same coordinates */
-        return 0;
-    }
 }
