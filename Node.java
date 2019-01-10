@@ -17,7 +17,7 @@ public class Node
     @Override
     public String toString()
     {
-        return label + "(" + x + ", " + y + ")";
+        return label;
     }
     
     @Override
