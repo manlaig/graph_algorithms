@@ -5,12 +5,16 @@ import java.util.*;
 
 public class Graph extends JFrame
 {
-	static int startX = 50, startY = 100;
-	static int widthOfNode = 30, heightOfNode = 30;
+	private static int startX = 50, startY = 100;
+	private static int widthOfNode = 30, heightOfNode = 30;
+
+	static Graph frame;
 	static ArrayList<Node> nodes;
+	static ArrayList<Node> currShortestPath;
+
 	public static void main(String[] args)
 	{
-		Graph frame = new Graph("Graph Visualizer");
+		frame = new Graph("Graph Visualizer");
     
         frame.addNode("a", startX, startY + 150);
 		frame.addNode("b", startX + 100, startY + 50);
@@ -33,8 +37,8 @@ public class Graph extends JFrame
 		frame.addEdge(1, 4, 3); frame.addEdge(4, 1, 3);
 		frame.addEdge(2, 5, 2); frame.addEdge(5, 2, 2);
 		frame.addEdge(2, 6, 2); frame.addEdge(6, 2, 2);
-		frame.addEdge(3, 4, 1); frame.addEdge(4, 3, 1);
 		frame.addEdge(3, 7, 2); frame.addEdge(7, 3, 2);
+		frame.addEdge(3, 4, 1); frame.addEdge(4, 3, 1);
 		frame.addEdge(4, 8, 3); frame.addEdge(8, 4, 3);
 		frame.addEdge(5, 8, 2); frame.addEdge(8, 5, 2);
 		frame.addEdge(6, 9, 1); frame.addEdge(9, 6, 1);
@@ -50,6 +54,7 @@ public class Graph extends JFrame
 	Graph(String title)
 	{
 		nodes = new ArrayList<>();
+		currShortestPath = new ArrayList<>();
 		JPanel pathFinder = new JPanel();
 		JTextField fromNode = new JTextField("a", 2);
 		JTextField toNode = new JTextField("m", 2);
@@ -68,12 +73,38 @@ public class Graph extends JFrame
 				{
 					int origin = ((int)fromNode.getText().charAt(0)) - 97;
 					int dest = ((int)toNode.getText().charAt(0)) - 97;
-					ArrayList<Node> path = Algorithms.DijkstrasAlgorithm(nodes, nodes.get(origin), nodes.get(dest));
-					DrawPath(path);
+					currShortestPath.clear();
+					currShortestPath = Algorithms.DijkstrasAlgorithm(nodes,
+										nodes.get(origin), nodes.get(dest));
+					repaint();
 				}
 				catch(Exception exc) { System.out.println("Invalid input"); }
 			}
 		});
+
+		JPanel top = new JPanel();
+		JButton dfs = new JButton("Depth-First Search");
+		JButton bfs = new JButton("Breadth-First Search");
+
+		bfs.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				currShortestPath.clear();
+				Algorithms.BreadthFirstSearch(frame);
+			}
+		});
+		dfs.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				currShortestPath.clear();
+				Algorithms.DepthFirstSearch(frame);
+			}
+		});
+		top.add(dfs);
+		top.add(bfs);
+
+		add(top, BorderLayout.NORTH);
+
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(600,600);
@@ -94,19 +125,19 @@ public class Graph extends JFrame
 	{
 		super.paint(g);
 		DrawEdges(g);
+		DrawPath(g, currShortestPath);
 		DrawNodes(g);
 	}
 
-	void DrawPath(ArrayList<Node> path)
+	void DrawPath(Graphics gr, ArrayList<Node> path)
 	{
 		if(path.size() <= 1)
 			return;
-		Graphics2D g = (Graphics2D) getGraphics();
-		paint(g);
+		Graphics2D g = (Graphics2D) gr;
 		g.setStroke(new BasicStroke(5));
 		for(int i = 1; i < path.size(); i++)
 			g.drawLine(path.get(i - 1).x, path.get(i - 1).y, path.get(i).x, path.get(i).y);
-		DrawNodes(getGraphics());
+		g.setStroke(new BasicStroke(1));
 	}
 
 	void DrawNodes(Graphics g)
@@ -123,7 +154,7 @@ public class Graph extends JFrame
 			g.drawOval(originNode.x - nodeWidth/2, originNode.y - nodeheightOfNode/2, 
 				nodeWidth, nodeheightOfNode);
 			g.drawString(originNode.label, originNode.x - f.stringWidth(originNode.label)/2,
-				originNode.y + f.getHeight()/2);
+				originNode.y + f.getHeight()/2 - 5);
 		}
 	}
 
@@ -137,5 +168,16 @@ public class Graph extends JFrame
 				double midY = originNode.y + (edgesDest.y - originNode.y)/2;
 				g.drawString(Integer.toString(originNode.edges.get(edgesDest)), (int) midX, (int) midY);
 			}
+	}
+
+	void ReDraw()
+	{
+		Thread t = new Thread() {
+			public void run()
+			{
+				paint(getGraphics());
+			}
+		};
+		t.start();
 	}
 }
