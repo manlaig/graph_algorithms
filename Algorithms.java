@@ -14,7 +14,7 @@ public class Algorithms
     public static void DepthFirstSearch(Graph graph)
     {
         ArrayList<Node> visited = new ArrayList<>();
-        LinkedList q = new LinkedList<>();
+        LinkedList<Node> q = new LinkedList<>();
 
         Node start = graph.nodes.get(0);
         q.add(start);
@@ -25,9 +25,8 @@ public class Algorithms
             if(!visited.contains(temp))
             {
                 graph.currShortestPath.add(temp);
-                System.out.println(temp);
                 graph.ReDraw();
-                sleep(150);
+                sleep(200);
             }
             visited.add(temp);
             for(Node edgeNode : temp.edges.keySet())
@@ -39,7 +38,7 @@ public class Algorithms
     public static void BreadthFirstSearch(Graph graph)
     {
         ArrayList<Node> visited = new ArrayList<>();
-        LinkedList q = new LinkedList<>();
+        LinkedList<Node> q = new LinkedList<>();
 
         Node start = graph.nodes.get(0);
         q.add(start);
@@ -50,9 +49,8 @@ public class Algorithms
             if(!visited.contains(temp))
             {
                 graph.currShortestPath.add(temp);
-                System.out.println(temp);
                 graph.ReDraw();
-                sleep(150);
+                sleep(200);
             }
             visited.add(temp);
             for(Node edgeNode : temp.edges.keySet())
@@ -93,7 +91,7 @@ public class Algorithms
                 int dist = distance.get(closest) + closest.edges.get(edgeNode);
                 if(!visited.get(edgeNode) && dist < distance.get(edgeNode))
                 {
-                    path.put(edgeNode, (ArrayList) path.get(closest).clone());
+                    path.put(edgeNode, (ArrayList<Node>) path.get(closest).clone());
                     path.get(edgeNode).add(closest);
                     distance.put(edgeNode, dist);
                 }

@@ -5,17 +5,19 @@ import java.util.*;
 
 public class Graph extends JFrame
 {
-	private static int startX = 50, startY = 100;
+	private static int windowSizeX = 800, windowSizeY = 700;
+	private static int startX = 150, startY = 250;
 	private static int widthOfNode = 30, heightOfNode = 30;
 
 	static Graph frame;
-	static ArrayList<Node> nodes;
-	static ArrayList<Node> currShortestPath;
+	ArrayList<Node> nodes;
+	ArrayList<Node> currShortestPath;
 
 	public static void main(String[] args)
 	{
 		frame = new Graph("Graph Visualizer");
-    
+	
+		// adding nodes
         frame.addNode("a", startX, startY + 150);
 		frame.addNode("b", startX + 100, startY + 50);
 		frame.addNode("c", startX + 100, startY + 250);
@@ -55,6 +57,11 @@ public class Graph extends JFrame
 	{
 		nodes = new ArrayList<>();
 		currShortestPath = new ArrayList<>();
+		JPanel stack = new JPanel();
+		stack.setLayout(new BoxLayout(stack, BoxLayout.Y_AXIS));
+		add(stack, BorderLayout.NORTH);
+		
+		// Dijstra row begin
 		JPanel pathFinder = new JPanel();
 		JTextField fromNode = new JTextField("a", 2);
 		JTextField toNode = new JTextField("m", 2);
@@ -64,8 +71,45 @@ public class Graph extends JFrame
 		pathFinder.add(new JLabel("To:"));
 		pathFinder.add(toNode);
 		pathFinder.add(b1);
-		add(pathFinder, BorderLayout.SOUTH);
-		
+		stack.add(pathFinder);
+		// Dijstra row end
+
+		// Traverse row begin
+		JPanel top = new JPanel();
+		JButton dfs = new JButton("Depth-First Search");
+		JButton bfs = new JButton("Breadth-First Search");
+		top.add(dfs);
+		top.add(bfs);
+		stack.add(top);
+		// Traverse row end
+
+		// Minimum spanning tree row begin
+		JPanel row = new JPanel();
+		stack.add(row);
+		JCheckBox a = new JCheckBox("a");
+		JCheckBox b = new JCheckBox("b");
+		JCheckBox c = new JCheckBox("c");
+		JCheckBox d = new JCheckBox("d");
+		JCheckBox e = new JCheckBox("e");
+		JCheckBox f = new JCheckBox("f");
+		JCheckBox g = new JCheckBox("g");
+		JCheckBox h = new JCheckBox("h");
+		JCheckBox i = new JCheckBox("i");
+		JCheckBox j = new JCheckBox("j");
+		JCheckBox k = new JCheckBox("k");
+		JCheckBox l = new JCheckBox("l");
+		JCheckBox m = new JCheckBox("m");
+		row.add(a);	row.add(b);
+		row.add(c);	row.add(d);
+		row.add(e);	row.add(f);
+		row.add(g);	row.add(h);
+		row.add(i);	row.add(j);
+		row.add(k);	row.add(l);
+		row.add(m);
+		JButton findTree = new JButton("Minimum-spanning tree");
+		row.add(findTree);
+		// Minimum spanning tree row end
+
 		b1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
@@ -81,11 +125,6 @@ public class Graph extends JFrame
 				catch(Exception exc) { System.out.println("Invalid input"); }
 			}
 		});
-
-		JPanel top = new JPanel();
-		JButton dfs = new JButton("Depth-First Search");
-		JButton bfs = new JButton("Breadth-First Search");
-
 		bfs.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
@@ -100,14 +139,16 @@ public class Graph extends JFrame
 				Algorithms.DepthFirstSearch(frame);
 			}
 		});
-		top.add(dfs);
-		top.add(bfs);
+		findTree.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
 
-		add(top, BorderLayout.NORTH);
+			}
+		});
 
 		setTitle(title);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(600,600);
+		setSize(windowSizeX,windowSizeY);
 		setVisible(true);
 	}
 
@@ -123,6 +164,8 @@ public class Graph extends JFrame
 	
 	public void paint(Graphics g)
 	{
+		// drawing the path on top of the edges,
+		// and the nodes on top of the path
 		super.paint(g);
 		DrawEdges(g);
 		DrawPath(g, currShortestPath);
@@ -150,9 +193,10 @@ public class Graph extends JFrame
 			g.setColor(Color.white);
 			g.fillOval(originNode.x - nodeWidth/2, originNode.y - nodeheightOfNode/2, 
 				nodeWidth, nodeheightOfNode);
-			g.setColor(Color.black);
-			g.drawOval(originNode.x - nodeWidth/2, originNode.y - nodeheightOfNode/2, 
+			g.setColor(Color.orange);
+			g.fillOval(originNode.x - nodeWidth/2, originNode.y - nodeheightOfNode/2, 
 				nodeWidth, nodeheightOfNode);
+				g.setColor(Color.black);
 			g.drawString(originNode.label, originNode.x - f.stringWidth(originNode.label)/2,
 				originNode.y + f.getHeight()/2 - 5);
 		}
@@ -172,6 +216,9 @@ public class Graph extends JFrame
 
 	void ReDraw()
 	{
+		// if we don't do the drawing on a separate thread,
+		// the main thread will work on drawing,
+		// which will show lag when algorithms are running 
 		Thread t = new Thread() {
 			public void run()
 			{

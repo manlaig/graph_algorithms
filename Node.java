@@ -2,9 +2,9 @@ import java.util.HashMap;
 
 public class Node
 {
-	int x, y;
+	int x, y;   // coordinates
 	String label;
-	HashMap<Node, Integer> edges;
+	HashMap<Node, Integer> edges;   // weighted edges
 	
 	public Node(String originNode, int xVal, int yVal)
 	{
