@@ -19,19 +19,26 @@ public class Algorithms
         Node start = graph.nodes.get(0);
         q.add(start);
 
+        // only for illustration purposes
+        HashMap<Node, Node> parent = new HashMap<>();
+        parent.put(start, start);
+
         while(!q.isEmpty())
         {
             Node temp = (Node) q.removeLast();
             if(!visited.contains(temp))
             {
-                graph.currShortestPath.add(temp);
+                graph.renderingGraph.add(new Edge(parent.get(temp), temp));
                 graph.ReDraw();
-                sleep(200);
+                sleep(250);
             }
             visited.add(temp);
             for(Node edgeNode : temp.edges.keySet())
                 if(!visited.contains(edgeNode))
+                {
+                    parent.put(edgeNode, temp);
                     q.add(edgeNode);
+                }
         }
     }
 
@@ -43,39 +50,48 @@ public class Algorithms
         Node start = graph.nodes.get(0);
         q.add(start);
 
+        // only for illustration purposes
+        HashMap<Node, Node> parent = new HashMap<>();
+        parent.put(start, start);
+
         while(!q.isEmpty())
         {
             Node temp = (Node) q.removeFirst();
             if(!visited.contains(temp))
             {
-                graph.currShortestPath.add(temp);
+                graph.renderingGraph.add(new Edge(parent.get(temp), temp));
                 graph.ReDraw();
-                sleep(200);
+                sleep(250);
             }
             visited.add(temp);
             for(Node edgeNode : temp.edges.keySet())
                 if(!visited.contains(edgeNode))
+                {
+                    parent.put(edgeNode, temp);
                     q.add(edgeNode);
+                }
         }
     }
 
-    public static ArrayList<Node> DijkstrasAlgorithm(ArrayList<Node> nodes, Node from, Node to)
+    public static void DijkstrasAlgorithm(Graph graph, Node from, Node to)
     {
         HashMap<Node, Boolean> visited = new HashMap<>();
         HashMap<Node, Integer> distance = new HashMap<>();
         ArrayList<Node> visitQueue = new ArrayList<>();
-        /* mapping the shortest path to every node */
-        HashMap<Node, ArrayList<Node>> path = new HashMap<>();
 
-        for(Node node : nodes)
+        // mapping the shortest path to every node
+        HashMap<Node, ArrayList<Edge>> path = new HashMap<>();
+
+        // Initializing each node to have distance of INFINITY
+        for(Node node : graph.nodes)
         {
             visited.put(node, false);
             distance.put(node, INFINITE);
-            path.put(node, new ArrayList<Node>());
+            path.put(node, new ArrayList<Edge>());
         }
         distance.put(from, 0);
         visitQueue.add(from);
-        path.put(from, new ArrayList<>());
+        path.put(from, new ArrayList<Edge>());
         
         while(!visitQueue.isEmpty())
         {
@@ -84,21 +100,32 @@ public class Algorithms
                 continue;
             visitQueue.remove(closest);
             visited.put(closest, true);
+
+            // looping over all the nodes, which 'closest' has an edge to
             for(Node edgeNode : closest.edges.keySet())
             {
+                // visit it later, if not already visited
                 if(!visited.get(edgeNode))
                     visitQueue.add(edgeNode);
+                
+                /* accumulate the distance to find the total distance to 'edgeNode' */
                 int dist = distance.get(closest) + closest.edges.get(edgeNode);
+
                 if(!visited.get(edgeNode) && dist < distance.get(edgeNode))
                 {
-                    path.put(edgeNode, (ArrayList<Node>) path.get(closest).clone());
-                    path.get(edgeNode).add(closest);
+                    ArrayList<Edge> newPath = (ArrayList<Edge>) path.get(closest).clone();
+                    newPath.add(new Edge(closest, edgeNode));
+                    path.put(edgeNode, newPath);
                     distance.put(edgeNode, dist);
+
+                    // for algorithm illustration
+                    // 'newPath' will be drawn with a 250ms delay
+                    graph.renderingGraph = newPath;
+                    graph.ReDraw();
+                    sleep(250);
                 }
             }
         }
-        path.get(to).add(to);
-        return path.get(to);
     }
     
     // what is the closest node we haven't visited
@@ -113,5 +140,13 @@ public class Algorithms
                 closest = node;
             }
         return closest;
+    }
+
+    public static void KruskalsAlgorithm(Graph graph)
+    {
+        for(Node node : graph.nodes)
+        {
+            
+        }
     }
 }
