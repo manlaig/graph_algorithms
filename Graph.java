@@ -11,7 +11,8 @@ public class Graph extends JFrame
 
 	static Graph frame;
 	ArrayList<Node> nodes;
-	ArrayList<Node> currShortestPath;
+	// the new graph to render on top of the main graph
+	ArrayList<Edge> renderingGraph;
 
 	public static void main(String[] args)
 	{
@@ -56,7 +57,7 @@ public class Graph extends JFrame
 	Graph(String title)
 	{
 		nodes = new ArrayList<>();
-		currShortestPath = new ArrayList<>();
+		renderingGraph = new ArrayList<>();
 		JPanel stack = new JPanel();
 		stack.setLayout(new BoxLayout(stack, BoxLayout.Y_AXIS));
 		add(stack, BorderLayout.NORTH);
@@ -117,10 +118,8 @@ public class Graph extends JFrame
 				{
 					int origin = ((int)fromNode.getText().charAt(0)) - 97;
 					int dest = ((int)toNode.getText().charAt(0)) - 97;
-					currShortestPath.clear();
-					currShortestPath = Algorithms.DijkstrasAlgorithm(nodes,
-										nodes.get(origin), nodes.get(dest));
-					repaint();
+					renderingGraph.clear();
+					Algorithms.DijkstrasAlgorithm(frame, nodes.get(origin), nodes.get(dest));
 				}
 				catch(Exception exc) { System.out.println("Invalid input"); }
 			}
@@ -128,21 +127,22 @@ public class Graph extends JFrame
 		bfs.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				currShortestPath.clear();
+				renderingGraph.clear();
 				Algorithms.BreadthFirstSearch(frame);
 			}
 		});
 		dfs.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				currShortestPath.clear();
+				renderingGraph.clear();
 				Algorithms.DepthFirstSearch(frame);
 			}
 		});
 		findTree.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-
+				renderingGraph.clear();
+				Algorithms.KruskalsAlgorithm(frame);
 			}
 		});
 
@@ -168,18 +168,22 @@ public class Graph extends JFrame
 		// and the nodes on top of the path
 		super.paint(g);
 		DrawEdges(g);
-		DrawPath(g, currShortestPath);
+		DrawPath(g, renderingGraph);
 		DrawNodes(g);
 	}
 
-	void DrawPath(Graphics gr, ArrayList<Node> path)
+	void DrawPath(Graphics gr, ArrayList<Edge> path)
 	{
 		if(path.size() <= 1)
 			return;
 		Graphics2D g = (Graphics2D) gr;
 		g.setStroke(new BasicStroke(5));
-		for(int i = 1; i < path.size(); i++)
-			g.drawLine(path.get(i - 1).x, path.get(i - 1).y, path.get(i).x, path.get(i).y);
+		for(int i = 0; i < path.size(); i++)
+		{
+			Node from = path.get(i).from;
+			Node to = path.get(i).to;
+			g.drawLine(from.x, from.y, to.x, to.y);
+		}
 		g.setStroke(new BasicStroke(1));
 	}
 
