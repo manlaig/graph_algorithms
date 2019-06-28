@@ -11,7 +11,7 @@ public class Algorithms
         while(System.currentTimeMillis() - initial < milliseconds);
     }
 
-    public static void DepthFirstSearch(Graph graph)
+    public static void DepthFirstSearch(Graph graph, Node target)
     {
         ArrayList<Node> visited = new ArrayList<>();
         LinkedList<Node> q = new LinkedList<>();
@@ -32,6 +32,8 @@ public class Algorithms
                 graph.ReDraw();
                 sleep(250);
             }
+            if(temp.equals(target))
+                break;
             visited.add(temp);
             for(Node edgeNode : temp.edges.keySet())
                 if(!visited.contains(edgeNode))
@@ -42,7 +44,7 @@ public class Algorithms
         }
     }
 
-    public static void BreadthFirstSearch(Graph graph)
+    public static void BreadthFirstSearch(Graph graph, Node target)
     {
         ArrayList<Node> visited = new ArrayList<>();
         LinkedList<Node> q = new LinkedList<>();
@@ -63,6 +65,8 @@ public class Algorithms
                 graph.ReDraw();
                 sleep(250);
             }
+            if(temp.equals(target))
+                break;
             visited.add(temp);
             for(Node edgeNode : temp.edges.keySet())
                 if(!visited.contains(edgeNode))
@@ -144,9 +148,20 @@ public class Algorithms
 
     public static void KruskalsAlgorithm(Graph graph)
     {
+        // the edges with the lowest cost will be on the top
+        PriorityQueue<Edge> nodes = new PriorityQueue<>(new EdgeComparator());
+
         for(Node node : graph.nodes)
         {
-            
+            for(Map.Entry<Node, Integer> edge : node.edges.entrySet())
+                nodes.add(new Edge(node, edge.getKey(), edge.getValue()));
+        }
+
+        while(!nodes.isEmpty())
+        {
+            Edge e = nodes.peek();
+            nodes.remove();
+            System.out.println(e);
         }
     }
 }
