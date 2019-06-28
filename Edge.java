@@ -17,6 +17,10 @@ public class Edge
         to = _to;
         cost = _cost;
     }
+    public String toString()
+    {
+        return String.format("from: %s  to: %s  cost: %d", from, to, cost);
+    }
 }
 
 // will be used for a PriorityQueue of Edges
