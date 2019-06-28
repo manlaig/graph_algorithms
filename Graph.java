@@ -34,7 +34,7 @@ public class Graph extends JFrame
 
 		// adding undirected edges
 		frame.addEdge(0, 1, 4); frame.addEdge(1, 0, 4);
-		frame.addEdge(0, 2, 4); frame.addEdge(2, 0, 4);
+		frame.addEdge(0, 2, 5); frame.addEdge(2, 0, 5);
 		frame.addEdge(1, 3, 1); frame.addEdge(3, 1, 1);
 		frame.addEdge(1, 4, 3); frame.addEdge(4, 1, 3);
 		frame.addEdge(2, 5, 2); frame.addEdge(5, 2, 2);
@@ -46,7 +46,7 @@ public class Graph extends JFrame
 		frame.addEdge(6, 9, 1); frame.addEdge(9, 6, 1);
 		frame.addEdge(7, 10, 3); frame.addEdge(10, 7, 3);
 		frame.addEdge(7, 11, 4); frame.addEdge(11, 7, 4);
-		frame.addEdge(8, 11, 2); frame.addEdge(11, 8, 2);
+		frame.addEdge(8, 11, 3); frame.addEdge(11, 8, 3);
 		frame.addEdge(9, 11, 2); frame.addEdge(11, 9, 2);
 	}
 
