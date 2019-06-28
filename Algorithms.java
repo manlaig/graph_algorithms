@@ -149,19 +149,27 @@ public class Algorithms
     public static void KruskalsAlgorithm(Graph graph)
     {
         // the edges with the lowest cost will be on the top
-        PriorityQueue<Edge> nodes = new PriorityQueue<>(new EdgeComparator());
+        PriorityQueue<Edge> edges = new PriorityQueue<>(new EdgeComparator());
+        DisjointSet set = new DisjointSet(graph.nodes.size());
 
         for(Node node : graph.nodes)
         {
             for(Map.Entry<Node, Integer> edge : node.edges.entrySet())
-                nodes.add(new Edge(node, edge.getKey(), edge.getValue()));
+                edges.add(new Edge(node, edge.getKey(), edge.getValue()));
         }
 
-        while(!nodes.isEmpty())
+        while(!edges.isEmpty())
         {
-            Edge e = nodes.peek();
-            nodes.remove();
-            System.out.println(e);
+            Edge e = edges.peek();
+            edges.remove();
+
+            if(!set.isConnected(e.from, e.to))
+            {
+                set.connect(e.from, e.to);
+                graph.renderingGraph.add(e);
+                graph.ReDraw();
+                sleep(500);
+            }
         }
     }
 }
