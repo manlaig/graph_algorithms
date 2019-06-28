@@ -31,7 +31,6 @@ public class Graph extends JFrame
 		frame.addNode("j", startX + 300, startY + 250);
 		frame.addNode("k", startX + 400, startY + 100);
 		frame.addNode("l", startX + 400, startY + 200);
-		frame.addNode("m", startX + 500, startY + 150);
 
 		// adding undirected edges
 		frame.addEdge(0, 1, 4); frame.addEdge(1, 0, 4);
@@ -48,10 +47,7 @@ public class Graph extends JFrame
 		frame.addEdge(7, 10, 3); frame.addEdge(10, 7, 3);
 		frame.addEdge(7, 11, 4); frame.addEdge(11, 7, 4);
 		frame.addEdge(8, 11, 2); frame.addEdge(11, 8, 2);
-		frame.addEdge(8, 12, 5); frame.addEdge(12, 8, 5);
 		frame.addEdge(9, 11, 2); frame.addEdge(11, 9, 2);
-		frame.addEdge(10, 12, 1); frame.addEdge(12, 10, 1);
-		frame.addEdge(11, 12, 1); frame.addEdge(12, 11, 1);
 	}
 
 	Graph(String title)
@@ -65,8 +61,8 @@ public class Graph extends JFrame
 		// Dijstra row begin
 		JPanel pathFinder = new JPanel();
 		JTextField fromNode = new JTextField("a", 2);
-		JTextField toNode = new JTextField("m", 2);
-		JButton b1 = new JButton("Use Dijkstra's");
+		JTextField toNode = new JTextField("l", 2);
+		JButton b1 = new JButton("Run Dijkstra's");
 		pathFinder.add(new JLabel("From:"));
 		pathFinder.add(fromNode);
 		pathFinder.add(new JLabel("To:"));
@@ -77,8 +73,12 @@ public class Graph extends JFrame
 
 		// Traverse row begin
 		JPanel top = new JPanel();
+		JTextField searchForNode = new JTextField("l", 2);
+		
 		JButton dfs = new JButton("Depth-First Search");
 		JButton bfs = new JButton("Breadth-First Search");
+		top.add(new JLabel("Search For:"));
+		top.add(searchForNode);
 		top.add(dfs);
 		top.add(bfs);
 		stack.add(top);
@@ -99,15 +99,13 @@ public class Graph extends JFrame
 		JCheckBox j = new JCheckBox("j");
 		JCheckBox k = new JCheckBox("k");
 		JCheckBox l = new JCheckBox("l");
-		JCheckBox m = new JCheckBox("m");
 		row.add(a);	row.add(b);
 		row.add(c);	row.add(d);
 		row.add(e);	row.add(f);
 		row.add(g);	row.add(h);
 		row.add(i);	row.add(j);
 		row.add(k);	row.add(l);
-		row.add(m);
-		JButton findTree = new JButton("Minimum-spanning tree");
+		JButton findTree = new JButton("Run Kruskal's");
 		row.add(findTree);
 		// Minimum spanning tree row end
 
@@ -127,15 +125,25 @@ public class Graph extends JFrame
 		bfs.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				renderingGraph.clear();
-				Algorithms.BreadthFirstSearch(frame);
+				try
+				{
+					int targetNode = ((int)searchForNode.getText().charAt(0)) - 97;
+					renderingGraph.clear();
+					Algorithms.BreadthFirstSearch(frame, nodes.get(targetNode));
+				}
+				catch(Exception exc) { System.out.println("Invalid input"); }
 			}
 		});
 		dfs.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				renderingGraph.clear();
-				Algorithms.DepthFirstSearch(frame);
+				try
+				{
+					int targetNode = ((int)searchForNode.getText().charAt(0)) - 97;
+					renderingGraph.clear();
+					Algorithms.DepthFirstSearch(frame, nodes.get(targetNode));
+				}
+				catch(Exception exc) { System.out.println("Invalid input"); }
 			}
 		});
 		findTree.addActionListener(new ActionListener() {
