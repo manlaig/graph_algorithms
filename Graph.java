@@ -87,24 +87,21 @@ public class Graph extends JFrame
 		// Minimum spanning tree row begin
 		JPanel row = new JPanel();
 		stack.add(row);
-		JCheckBox a = new JCheckBox("a");
-		JCheckBox b = new JCheckBox("b");
-		JCheckBox c = new JCheckBox("c");
-		JCheckBox d = new JCheckBox("d");
-		JCheckBox e = new JCheckBox("e");
-		JCheckBox f = new JCheckBox("f");
-		JCheckBox g = new JCheckBox("g");
-		JCheckBox h = new JCheckBox("h");
-		JCheckBox i = new JCheckBox("i");
-		JCheckBox j = new JCheckBox("j");
-		JCheckBox k = new JCheckBox("k");
-		JCheckBox l = new JCheckBox("l");
-		row.add(a);	row.add(b);
-		row.add(c);	row.add(d);
-		row.add(e);	row.add(f);
-		row.add(g);	row.add(h);
-		row.add(i);	row.add(j);
-		row.add(k);	row.add(l);
+		ArrayList<JCheckBox> checkBoxes = new ArrayList<>();
+		checkBoxes.add(new JCheckBox("a"));
+		checkBoxes.add(new JCheckBox("b"));
+		checkBoxes.add(new JCheckBox("c"));
+		checkBoxes.add(new JCheckBox("d"));
+		checkBoxes.add(new JCheckBox("e"));
+		checkBoxes.add(new JCheckBox("f"));
+		checkBoxes.add(new JCheckBox("g"));
+		checkBoxes.add(new JCheckBox("h"));
+		checkBoxes.add(new JCheckBox("i"));
+		checkBoxes.add(new JCheckBox("j"));
+		checkBoxes.add(new JCheckBox("k"));
+		checkBoxes.add(new JCheckBox("l"));
+		for(int i = 0; i < checkBoxes.size(); i++)
+			row.add(checkBoxes.get(i));
 		JButton findTree = new JButton("Run Kruskal's");
 		row.add(findTree);
 		// Minimum spanning tree row end
@@ -149,8 +146,18 @@ public class Graph extends JFrame
 		findTree.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
+				// find minimum spanning tree spanning these nodes
+				ArrayList<Node> targetNodes = new ArrayList<>();
+				for(int i = 0; i < checkBoxes.size(); i++)
+				{
+					if(checkBoxes.get(i).isSelected())
+					{
+						int index = (int) checkBoxes.get(i).getText().charAt(0) - 97;
+						targetNodes.add(nodes.get(index));
+					}
+				}
 				renderingGraph.clear();
-				Algorithms.KruskalsAlgorithm(frame);
+				Algorithms.KruskalsAlgorithm(frame, targetNodes);
 			}
 		});
 

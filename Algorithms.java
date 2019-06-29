@@ -133,6 +133,7 @@ public class Algorithms
     }
     
     // what is the closest node we haven't visited
+    // used by Dijkstra's Algorithm
     private static Node getClosestUnvisited(HashMap<Node, Integer> distance, ArrayList<Node> nodes)
     {
         int smallest = INFINITE;
@@ -146,18 +147,30 @@ public class Algorithms
         return closest;
     }
 
-    public static void KruskalsAlgorithm(Graph graph)
+    // find a minimum spanning tree spanning the 'targetNodes'
+    public static void KruskalsAlgorithm(Graph graph, ArrayList<Node> targetNodes)
     {
         // the edges with the lowest cost will be on the top
         PriorityQueue<Edge> edges = new PriorityQueue<>(new EdgeComparator());
         DisjointSet set = new DisjointSet(graph.nodes.size());
 
-        for(Node node : graph.nodes)
+        // kind of like a preprocessing step
+        // fill 'edges' queue with the appropriate edges
+        // appropriate edges meaning edges connecting 'targetNodes'
+        for(Node node : targetNodes)
         {
             for(Map.Entry<Node, Integer> edge : node.edges.entrySet())
-                edges.add(new Edge(node, edge.getKey(), edge.getValue()));
+            {
+                // only include edges that connect our target nodes
+                for(Node n : targetNodes)
+                {
+                    if(edge.getKey().equals(n))
+                        edges.add(new Edge(node, edge.getKey(), edge.getValue()));
+                }
+            }
         }
 
+        // loop through all the edges, starting with the lowest weight
         while(!edges.isEmpty())
         {
             Edge e = edges.peek();
@@ -167,6 +180,8 @@ public class Algorithms
             {
                 set.connect(e.from, e.to);
                 graph.renderingGraph.add(e);
+
+                // for algorithm visualization
                 graph.ReDraw();
                 sleep(500);
             }
