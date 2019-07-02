@@ -130,6 +130,10 @@ public class Algorithms
                 }
             }
         }
+        // finding the shortest path to 'to'
+        graph.renderingGraph = path.get(to);
+        graph.ReDraw();
+        sleep(250);
     }
     
     // what is the closest node we haven't visited
