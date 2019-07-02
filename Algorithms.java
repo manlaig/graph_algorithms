@@ -115,7 +115,7 @@ public class Algorithms
                 /* accumulate the distance to find the total distance to 'edgeNode' */
                 int dist = distance.get(closest) + closest.edges.get(edgeNode);
 
-                if(!visited.get(edgeNode) && dist < distance.get(edgeNode))
+                if(dist < distance.get(edgeNode))
                 {
                     ArrayList<Edge> newPath = (ArrayList<Edge>) path.get(closest).clone();
                     newPath.add(new Edge(closest, edgeNode));
@@ -130,7 +130,7 @@ public class Algorithms
                 }
             }
         }
-        // finding the shortest path to 'to'
+        // when done, show the shortest path to node 'to'
         graph.renderingGraph = path.get(to);
         graph.ReDraw();
         sleep(250);
