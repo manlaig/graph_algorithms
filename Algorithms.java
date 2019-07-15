@@ -79,7 +79,6 @@ public class Algorithms
 
     public static void DijkstrasAlgorithm(Graph graph, Node from, Node to)
     {
-        HashMap<Node, Boolean> visited = new HashMap<>();
         HashMap<Node, Integer> distance = new HashMap<>();
         ArrayList<Node> visitQueue = new ArrayList<>();
 
@@ -89,13 +88,11 @@ public class Algorithms
         // Initializing each node to have distance of INFINITY
         for(Node node : graph.nodes)
         {
-            visited.put(node, false);
             distance.put(node, INFINITE);
             path.put(node, new ArrayList<Edge>());
         }
         distance.put(from, 0);
         visitQueue.add(from);
-        path.put(from, new ArrayList<Edge>());
         
         while(!visitQueue.isEmpty())
         {
@@ -103,20 +100,16 @@ public class Algorithms
             if(closest == null)
                 continue;
             visitQueue.remove(closest);
-            visited.put(closest, true);
 
             // looping over all the nodes, which 'closest' has an edge to
             for(Node edgeNode : closest.edges.keySet())
             {
-                // visit it later, if not already visited
-                if(!visited.get(edgeNode))
-                    visitQueue.add(edgeNode);
-                
                 /* accumulate the distance to find the total distance to 'edgeNode' */
                 int dist = distance.get(closest) + closest.edges.get(edgeNode);
 
                 if(dist < distance.get(edgeNode))
                 {
+                    visitQueue.add(edgeNode);
                     ArrayList<Edge> newPath = (ArrayList<Edge>) path.get(closest).clone();
                     newPath.add(new Edge(closest, edgeNode));
                     path.put(edgeNode, newPath);
