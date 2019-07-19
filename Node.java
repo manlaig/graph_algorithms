@@ -1,4 +1,5 @@
 import java.util.HashMap;
+import java.util.Comparator;
 
 public class Node
 {
@@ -25,5 +26,24 @@ public class Node
     {
         Node node = (Node) obj;
         return node.x == x && node.y == y;
+    }
+}
+
+class NodeComparator implements Comparator<Node>
+{
+    HashMap<Node, Integer> distance;
+
+    NodeComparator(HashMap<Node, Integer> _distance)
+    {
+        distance = _distance;
+    }
+
+    public int compare(Node n1, Node n2)
+    {
+        if(distance.get(n1) > distance.get(n2))
+            return 1;
+        else if(distance.get(n1) < distance.get(n2))
+            return -1;
+        return 0;
     }
 }
