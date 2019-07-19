@@ -79,11 +79,10 @@ public class Algorithms
 
     public static void DijkstrasAlgorithm(Graph graph, Node from, Node to)
     {
-        HashMap<Node, Integer> distance = new HashMap<>();
-        ArrayList<Node> visitQueue = new ArrayList<>();
-
         // mapping the shortest path to every node
         HashMap<Node, ArrayList<Edge>> path = new HashMap<>();
+        HashMap<Node, Integer> distance = new HashMap<>();
+        PriorityQueue<Node> visitQueue = new PriorityQueue<>(new NodeComparator(distance));
 
         // Initializing each node to have distance of INFINITY
         for(Node node : graph.nodes)
@@ -91,17 +90,16 @@ public class Algorithms
             distance.put(node, INFINITE);
             path.put(node, new ArrayList<Edge>());
         }
+        
         distance.put(from, 0);
         visitQueue.add(from);
         
         while(!visitQueue.isEmpty())
         {
-            Node closest = getClosestUnvisited(distance, visitQueue);
-            if(closest == null)
-                continue;
-            visitQueue.remove(closest);
+            System.out.println(visitQueue);
+            Node closest = visitQueue.remove();
 
-            // looping over all the nodes, which 'closest' has an edge to
+            /* looping over all the nodes, which 'closest' has an edge to */
             for(Node edgeNode : closest.edges.keySet())
             {
                 /* accumulate the distance to find the total distance to 'edgeNode' */
@@ -126,22 +124,6 @@ public class Algorithms
         // when done, show the shortest path to node 'to'
         graph.renderingGraph = path.get(to);
         graph.ReDraw();
-        sleep(250);
-    }
-    
-    // what is the closest node we haven't visited
-    // used by Dijkstra's Algorithm
-    private static Node getClosestUnvisited(HashMap<Node, Integer> distance, ArrayList<Node> nodes)
-    {
-        int smallest = INFINITE;
-        Node closest = null;
-        for(Node node : nodes)
-            if(distance.get(node) < smallest)
-            {
-                smallest = distance.get(node);
-                closest = node;
-            }
-        return closest;
     }
 
     // find a minimum spanning tree spanning the 'targetNodes'

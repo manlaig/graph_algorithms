@@ -29,6 +29,8 @@ public class Node
     }
 }
 
+// used by Greedy Algorithms, like Dijkstra's and Prim's
+// pass it to the PriorityQueue
 class NodeComparator implements Comparator<Node>
 {
     HashMap<Node, Integer> distance;

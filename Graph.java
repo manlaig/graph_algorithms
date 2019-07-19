@@ -61,7 +61,7 @@ public class Graph extends JFrame
 		// Dijstra row begin
 		JPanel pathFinder = new JPanel();
 		JTextField fromNode = new JTextField("a", 2);
-		JTextField toNode = new JTextField("l", 2);
+		JTextField toNode = new JTextField("k", 2);
 		JButton b1 = new JButton("Run Dijkstra's");
 		pathFinder.add(new JLabel("From:"));
 		pathFinder.add(fromNode);
