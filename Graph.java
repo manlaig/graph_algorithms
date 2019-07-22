@@ -9,10 +9,10 @@ public class Graph extends JFrame
 	private static int startX = 150, startY = 250;
 	private static int widthOfNode = 30, heightOfNode = 30;
 
-	static Graph frame;
-	ArrayList<Node> nodes;
+	public static Graph frame;
+	public ArrayList<Node> nodes;
 	// the new graph to render on top of the main graph
-	ArrayList<Edge> renderingGraph;
+	public ArrayList<Edge> renderingGraph;
 
 	public static void main(String[] args)
 	{
@@ -50,7 +50,7 @@ public class Graph extends JFrame
 		frame.addEdge(9, 11, 2); frame.addEdge(11, 9, 2);
 	}
 
-	Graph(String title)
+	public Graph(String title)
 	{
 		nodes = new ArrayList<>();
 		renderingGraph = new ArrayList<>();
@@ -88,22 +88,24 @@ public class Graph extends JFrame
 		JPanel row = new JPanel();
 		stack.add(row);
 		ArrayList<JCheckBox> checkBoxes = new ArrayList<>();
-		checkBoxes.add(new JCheckBox("a"));
-		checkBoxes.add(new JCheckBox("b"));
-		checkBoxes.add(new JCheckBox("c"));
-		checkBoxes.add(new JCheckBox("d"));
-		checkBoxes.add(new JCheckBox("e"));
-		checkBoxes.add(new JCheckBox("f"));
-		checkBoxes.add(new JCheckBox("g"));
-		checkBoxes.add(new JCheckBox("h"));
-		checkBoxes.add(new JCheckBox("i"));
-		checkBoxes.add(new JCheckBox("j"));
-		checkBoxes.add(new JCheckBox("k"));
-		checkBoxes.add(new JCheckBox("l"));
+		checkBoxes.add(new JCheckBox("a", true));
+		checkBoxes.add(new JCheckBox("b", true));
+		checkBoxes.add(new JCheckBox("c", true));
+		checkBoxes.add(new JCheckBox("d", true));
+		checkBoxes.add(new JCheckBox("e", true));
+		checkBoxes.add(new JCheckBox("f", true));
+		checkBoxes.add(new JCheckBox("g", true));
+		checkBoxes.add(new JCheckBox("h", true));
+		checkBoxes.add(new JCheckBox("i", true));
+		checkBoxes.add(new JCheckBox("j", true));
+		checkBoxes.add(new JCheckBox("k", true));
+		checkBoxes.add(new JCheckBox("l", true));
 		for(int i = 0; i < checkBoxes.size(); i++)
 			row.add(checkBoxes.get(i));
-		JButton findTree = new JButton("Run Kruskal's");
-		row.add(findTree);
+		JButton kruskal = new JButton("Run Kruskal's");
+		row.add(kruskal);
+		JButton prim = new JButton("Run Prim's");
+		row.add(prim);
 		// Minimum spanning tree row end
 
 		b1.addActionListener(new ActionListener() {
@@ -143,21 +145,22 @@ public class Graph extends JFrame
 				catch(Exception exc) { System.out.println("Invalid input"); }
 			}
 		});
-		findTree.addActionListener(new ActionListener() {
+		kruskal.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
 				// find minimum spanning tree spanning these nodes
-				ArrayList<Node> targetNodes = new ArrayList<>();
-				for(int i = 0; i < checkBoxes.size(); i++)
-				{
-					if(checkBoxes.get(i).isSelected())
-					{
-						int index = (int) checkBoxes.get(i).getText().charAt(0) - 97;
-						targetNodes.add(nodes.get(index));
-					}
-				}
+				ArrayList<Node> targetNodes = getSelectedNodes(checkBoxes);
 				renderingGraph.clear();
 				Algorithms.KruskalsAlgorithm(frame, targetNodes);
+			}
+		});
+		prim.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e)
+			{
+				// find minimum spanning tree spanning these nodes
+				ArrayList<Node> targetNodes = getSelectedNodes(checkBoxes);
+				renderingGraph.clear();
+				Algorithms.PrimsAlgorithm(frame, targetNodes);
 			}
 		});
 
@@ -167,12 +170,26 @@ public class Graph extends JFrame
 		setVisible(true);
 	}
 
-	void addNode(String label, int x, int y)
+	private ArrayList<Node> getSelectedNodes(ArrayList<JCheckBox> checkBoxes)
+	{
+		ArrayList<Node> targetNodes = new ArrayList<>();
+		for(int i = 0; i < checkBoxes.size(); i++)
+		{
+			if(checkBoxes.get(i).isSelected())
+			{
+				int index = (int) checkBoxes.get(i).getText().charAt(0) - 97;
+				targetNodes.add(nodes.get(index));
+			}
+		}
+		return targetNodes.size() == 0 ? nodes : targetNodes;
+	}
+
+	private void addNode(String label, int x, int y)
 	{ 
 		nodes.add(new Node(label, x, y));
 	}
 	
-	void addEdge(int from, int to, int cost)
+	private void addEdge(int from, int to, int cost)
 	{
 		nodes.get(from).edges.put(nodes.get(to), cost);
 	}
@@ -187,7 +204,7 @@ public class Graph extends JFrame
 		DrawNodes(g);
 	}
 
-	void DrawPath(Graphics gr, ArrayList<Edge> path)
+	private void DrawPath(Graphics gr, ArrayList<Edge> path)
 	{
 		if(path.size() <= 1)
 			return;
@@ -202,7 +219,7 @@ public class Graph extends JFrame
 		g.setStroke(new BasicStroke(1));
 	}
 
-	void DrawNodes(Graphics g)
+	private void DrawNodes(Graphics g)
 	{
 		FontMetrics f = g.getFontMetrics();
 		int nodeheightOfNode = Math.max(heightOfNode, f.getHeight());
@@ -221,7 +238,7 @@ public class Graph extends JFrame
 		}
 	}
 
-	void DrawEdges(Graphics g)
+	private void DrawEdges(Graphics g)
 	{
 		for(Node originNode : nodes)
 			for(Node edgesDest : originNode.edges.keySet())
@@ -233,7 +250,7 @@ public class Graph extends JFrame
 			}
 	}
 
-	void ReDraw()
+	public void ReDraw()
 	{
 		// if we don't do the drawing on a separate thread,
 		// the main thread will work on drawing,
