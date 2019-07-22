@@ -30,7 +30,7 @@ public class Algorithms
             {
                 graph.renderingGraph.add(new Edge(parent.get(temp), temp));
                 graph.ReDraw();
-                sleep(250);
+                sleep(500);
             }
             if(temp.equals(target))
                 break;
@@ -63,7 +63,7 @@ public class Algorithms
             {
                 graph.renderingGraph.add(new Edge(parent.get(temp), temp));
                 graph.ReDraw();
-                sleep(250);
+                sleep(500);
             }
             if(temp.equals(target))
                 break;
@@ -90,14 +90,13 @@ public class Algorithms
             distance.put(node, INFINITE);
             path.put(node, new ArrayList<Edge>());
         }
-        
+
         distance.put(from, 0);
         visitQueue.add(from);
         
         while(!visitQueue.isEmpty())
         {
-            System.out.println(visitQueue);
-            Node closest = visitQueue.remove();
+            Node closest = visitQueue.poll();
 
             /* looping over all the nodes, which 'closest' has an edge to */
             for(Node edgeNode : closest.edges.keySet())
@@ -117,7 +116,7 @@ public class Algorithms
                     // 'newPath' will be drawn with a 250ms delay
                     graph.renderingGraph = newPath;
                     graph.ReDraw();
-                    sleep(250);
+                    sleep(500);
                 }
             }
         }
@@ -152,8 +151,7 @@ public class Algorithms
         // loop through all the edges, starting with the lowest weight
         while(!edges.isEmpty())
         {
-            Edge e = edges.peek();
-            edges.remove();
+            Edge e = edges.poll();
 
             if(!set.isConnected(e.from, e.to))
             {
@@ -164,6 +162,40 @@ public class Algorithms
                 graph.ReDraw();
                 sleep(500);
             }
+        }
+    }
+
+    // find a minimum spanning tree spanning the 'targetNodes'
+    public static void PrimsAlgorithm(Graph graph, ArrayList<Node> targetNodes)
+    {
+        PriorityQueue<Edge> edges = new PriorityQueue<>(new EdgeComparator());
+        HashMap<Node, Boolean> visited = new HashMap<>();
+
+        Node start = targetNodes.get(0);
+        visited.put(start, true);
+        for(Map.Entry<Node, Integer> edge : start.edges.entrySet())
+            edges.add(new Edge(start, edge.getKey(), edge.getValue()));
+
+        while(edges.size() > 0)
+        {
+            Edge e = edges.poll();
+            if(visited.containsKey(e.to))
+                continue;
+            visited.put(e.to, true);
+            
+            for(Node n : targetNodes)
+                if(n.equals(e.to))
+                {
+                    for(Map.Entry<Node, Integer> edge : n.edges.entrySet())
+                        if(!visited.containsKey(edge.getKey()))
+                            edges.add(new Edge(n, edge.getKey(), edge.getValue()));
+                    
+                    graph.renderingGraph.add(e);
+                    // for algorithm visualization
+                    graph.ReDraw();
+                    sleep(500);
+                    break;
+                }
         }
     }
 }
